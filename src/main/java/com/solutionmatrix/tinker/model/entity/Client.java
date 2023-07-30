@@ -52,5 +52,6 @@ public class Client implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", updatable = false, insertable = false, nullable = false)
     @JsonBackReference("category_reference")
+    @JsonIgnore
     private Category category;
 }

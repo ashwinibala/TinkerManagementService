@@ -23,6 +23,8 @@ public class ClientService {
 
     private ClientMapper clientMapper;
 
+    private ClientAvailabilityService clientAvailabilityService;
+
     public ClientPostResponseDTO createClient(ClientPostRequestDTO clientPostRequestDTO) {
 
         try {
@@ -34,6 +36,7 @@ public class ClientService {
             }
             try {
                 Client client = clientRepository.save(clientRequest);
+                clientAvailabilityService.addClientAvailability(client.getId());
                 return clientMapper.clientToClientPostResponseDto(client);
             } catch(Exception e) {
                 throw new RuntimeException("Database Save Error");

@@ -1,32 +1,33 @@
 package com.solutionmatrix.tinker.controller;
 
 import com.solutionmatrix.tinker.constants.ResponseCode;
-import com.solutionmatrix.tinker.model.entity.Client;
-import com.solutionmatrix.tinker.model.request.ClientPostRequestDTO;
 import com.solutionmatrix.tinker.model.response.Response;
-import com.solutionmatrix.tinker.service.ClientService;
+import com.solutionmatrix.tinker.service.ClientAvailabilityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/client")
-public class ClientController {
+@RequestMapping("/clientavailability")
+public class ClientAvailabilityController {
 
-    private final ClientService clientService;
+    private final ClientAvailabilityService clientAvailabilityService;
 
-    @PostMapping
-    public Response<?> createClient(@RequestBody ClientPostRequestDTO clientPostRequestDTO) {
-
+    @GetMapping(value = "/{categoryId}/{date}/{timeslotId}")
+    public Response<?> getClient(@PathVariable Long categoryId, String date, Long timeslotId) {
+        System.out.println(categoryId);
+        System.out.println(date);
+        System.out.println(timeslotId);
         try {
             return Response.builder()
                     .responseMessage(ResponseCode.SUCCESS.getMessage())
                     .responseCode(ResponseCode.SUCCESS.getCode())
-                    .response(clientService.createClient(clientPostRequestDTO))
+                    .response(clientAvailabilityService.getClientAvailability(categoryId, "2023-07-21", 2L))
                     .build();
         } catch (RuntimeException e) {
             return Response.builder()
@@ -41,15 +42,5 @@ public class ClientController {
                     .responseMessage(ResponseCode.NOTACCEPTABLE.getMessage())
                     .build();
         }
-    }
-
-    @GetMapping(value = "/{id}")
-    public Optional<Client> getClient(@PathVariable Long id) {
-        return clientService.getClient(id);
-    }
-
-    @PatchMapping
-    public Client updateClient(Client client) {
-        return clientService.updateClient(client);
     }
 }
