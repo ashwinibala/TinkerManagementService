@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -19,15 +22,19 @@ public class ClientAvailabilityController {
     private final ClientAvailabilityService clientAvailabilityService;
 
     @GetMapping(value = "/{categoryId}/{date}/{timeslotId}")
-    public Response<?> getClient(@PathVariable Long categoryId, String date, Long timeslotId) {
-        System.out.println(categoryId);
-        System.out.println(date);
-        System.out.println(timeslotId);
+    public Response<?> getClient(@PathVariable("categoryId") Long categoryId,
+                                 @PathVariable("date") String date,
+                                 @PathVariable("timeslotId") Long timeslotId) {
+
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate availableDate = LocalDate.parse(date, inputFormatter);
+        String formattedDate = availableDate.format(outputFormatter);
         try {
             return Response.builder()
                     .responseMessage(ResponseCode.SUCCESS.getMessage())
                     .responseCode(ResponseCode.SUCCESS.getCode())
-                    .response(clientAvailabilityService.getClientAvailability(categoryId, "2023-07-21", 2L))
+                    .response(clientAvailabilityService.getClientAvailability(categoryId, formattedDate, timeslotId))
                     .build();
         } catch (RuntimeException e) {
             return Response.builder()

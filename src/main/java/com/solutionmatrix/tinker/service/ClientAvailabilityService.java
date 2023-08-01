@@ -44,12 +44,12 @@ public class ClientAvailabilityService {
                 try {
                         LocalDate localDate = LocalDate.now();
                         for (int i = 0; i < 7; i++) {
+                                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                                 localDate = localDate.plus(1, ChronoUnit.DAYS);
-
                                 for (long j = 1; j <= 5; j++) {
                                         ClientAvailability clientAvailability = ClientAvailability.builder()
                                                 .clientId(clientId)
-                                                .date(localDate.format(DateTimeFormatter.ofPattern("YYYY-MM-DD")))
+                                                .date(localDate.format(formatter))
                                                 .timeslotId(j)
                                                 .statusId(1L)
                                                 .build();
@@ -63,7 +63,7 @@ public class ClientAvailabilityService {
 
         public void updateClientAvailability(Long clientId, String date, Long timeslotId) {
                 try {
-                   Optional<ClientAvailability> clientAvailability = clientAvailabilityRepository.findByClientIdAndDateAndTimeslotIdAndStatusId(clientId, String.valueOf(date), timeslotId, 1L);
+                   Optional<ClientAvailability> clientAvailability = clientAvailabilityRepository.findByClientIdAndDateAndTimeslotIdAndStatusId(clientId, date, timeslotId, 1L);
                    if (clientAvailability.isPresent()){
                            ClientAvailability availability = clientAvailability.get();
                            availability.setStatusId(2L);
