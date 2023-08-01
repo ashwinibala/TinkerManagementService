@@ -1,6 +1,5 @@
 package com.solutionmatrix.tinker.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +19,6 @@ public class Customer implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     private Long id;
 
     @Column(name = "lastname", nullable = false)
@@ -37,5 +35,8 @@ public class Customer implements Serializable {
 
     @Column(name = "address", nullable = false)
     private String address;
+
+    @Column(name = "postalcode")
+    private String postalcode;
 
 }

@@ -44,7 +44,6 @@ public class ClientService {
         } catch(Exception e){
             throw new RuntimeException();
         }
-
     }
 
     public Optional<Client> getClient(Long clientId) {

@@ -6,6 +6,7 @@ import com.solutionmatrix.tinker.repository.ClientAvailabilityRepository;
 import com.solutionmatrix.tinker.repository.ClientRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -22,6 +23,7 @@ public class ClientAvailabilityService {
 
         private final ClientRepository clientRepository;
 
+        @Transactional
         public List<Client> getClientAvailability(Long categoryId, String date, Long timeslotId) {
                 List<Client> availableClients = new ArrayList<>();
                 try {
@@ -43,11 +45,12 @@ public class ClientAvailabilityService {
                         LocalDate localDate = LocalDate.now();
                         for (int i = 0; i < 7; i++) {
                                 localDate = localDate.plus(1, ChronoUnit.DAYS);
-                                for (int j = 0; j < 14; j++) {
+
+                                for (long j = 1; j <= 5; j++) {
                                         ClientAvailability clientAvailability = ClientAvailability.builder()
                                                 .clientId(clientId)
                                                 .date(localDate.format(DateTimeFormatter.ofPattern("YYYY-MM-DD")))
-                                                .timeslotId((long) j)
+                                                .timeslotId(j)
                                                 .statusId(1L)
                                                 .build();
                                         clientAvailabilityRepository.save(clientAvailability);

@@ -1,7 +1,7 @@
 package com.solutionmatrix.tinker.controller;
 
 import com.solutionmatrix.tinker.constants.ResponseCode;
-import com.solutionmatrix.tinker.model.entity.Appointment;
+import com.solutionmatrix.tinker.model.request.AppointmentRequestDTO;
 import com.solutionmatrix.tinker.model.response.Response;
 import com.solutionmatrix.tinker.service.AppointmentService;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +20,13 @@ public class AppointmentController {
     private final AppointmentService appointmentService;
 
     @PostMapping
-    public Response<?> createAppointment(@RequestBody Appointment appointment) {
+    public Response<?> createAppointment(@RequestBody AppointmentRequestDTO appointmentRequestDTO) {
 
         try {
             return Response.builder()
                     .responseMessage(ResponseCode.SUCCESS.getMessage())
                     .responseCode(ResponseCode.SUCCESS.getCode())
-                    .response(createAppointment(appointment))
+                    .response(appointmentService.createAppointment(appointmentRequestDTO))
                     .build();
         } catch (RuntimeException e) {
             return Response.builder()

@@ -22,11 +22,13 @@ public class Appointment implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     private Long id;
 
     @Column(name = "date", nullable = false, unique = true)
     private String date;
+
+    @Column(name = "description")
+    private String description;
 
     @Column(name = "client_id", nullable = false)
     private Long clientId;
