@@ -70,7 +70,7 @@ public class ClientController {
             } else if (loginChecker == 404) {
                 return Response.builder()
                         .responseMessage("Username not Found")
-                        .responseCode(ResponseCode.CONFLICT.getCode())
+                        .responseCode(ResponseCode.NOTFOUND.getCode())
                         .response("username_not_found")
                         .build();
             }
