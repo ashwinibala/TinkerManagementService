@@ -6,10 +6,7 @@ import com.solutionmatrix.tinker.model.response.Response;
 import com.solutionmatrix.tinker.service.AppointmentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,6 +24,30 @@ public class AppointmentController {
                     .responseMessage(ResponseCode.SUCCESS.getMessage())
                     .responseCode(ResponseCode.SUCCESS.getCode())
                     .response(appointmentService.createAppointment(appointmentRequestDTO))
+                    .build();
+        } catch (RuntimeException e) {
+            return Response.builder()
+                    .responseMessage(e.getMessage())
+                    .responseCode(ResponseCode.CONFLICT.getCode())
+                    .response("")
+                    .build();
+        } catch (Exception e) {
+            return Response.builder()
+                    .response("")
+                    .responseCode(ResponseCode.NOTACCEPTABLE.getCode())
+                    .responseMessage(ResponseCode.NOTACCEPTABLE.getMessage())
+                    .build();
+        }
+    }
+
+    @GetMapping(value = "/{clientId}")
+    public Response<?> getAppointments(@PathVariable("clientId") Long clientId) {
+
+        try {
+            return Response.builder()
+                    .responseMessage(ResponseCode.SUCCESS.getMessage())
+                    .responseCode(ResponseCode.SUCCESS.getCode())
+                    .response(appointmentService.getAppointments(clientId))
                     .build();
         } catch (RuntimeException e) {
             return Response.builder()

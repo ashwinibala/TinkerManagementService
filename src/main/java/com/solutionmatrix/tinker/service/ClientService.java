@@ -3,6 +3,7 @@ package com.solutionmatrix.tinker.service;
 import com.solutionmatrix.tinker.mapper.ClientMapper;
 import com.solutionmatrix.tinker.model.entity.Client;
 import com.solutionmatrix.tinker.model.request.ClientPostRequestDTO;
+import com.solutionmatrix.tinker.model.request.LoginDTO;
 import com.solutionmatrix.tinker.model.response.ClientPostResponseDTO;
 import com.solutionmatrix.tinker.repository.ClientRepository;
 import com.solutionmatrix.tinker.validator.ClientValidator;
@@ -40,6 +41,24 @@ public class ClientService {
                 return clientMapper.clientToClientPostResponseDto(client);
             } catch(Exception e) {
                 throw new RuntimeException("Database Save Error");
+            }
+        } catch(Exception e){
+            throw new RuntimeException();
+        }
+    }
+
+    public int loginCheck(LoginDTO loginDTO) {
+
+        try {
+            Optional<Client> client = clientRepository.findByUsername(loginDTO.getUsername());
+            if(client.isPresent()) {
+                if (client.get().getPassword().equals(loginDTO.getPassword())) {
+                    return 200;
+                } else {
+                    return 409;
+                }
+            } else {
+                return 404;
             }
         } catch(Exception e){
             throw new RuntimeException();

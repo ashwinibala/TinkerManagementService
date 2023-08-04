@@ -2,11 +2,16 @@ package com.solutionmatrix.tinker.service;
 
 import com.solutionmatrix.tinker.model.entity.*;
 import com.solutionmatrix.tinker.model.request.AppointmentRequestDTO;
+import com.solutionmatrix.tinker.model.response.AppointmentBookingsDTO;
 import com.solutionmatrix.tinker.model.response.AppointmentResponseDTO;
+import com.solutionmatrix.tinker.model.response.AppointmentsListDTO;
 import com.solutionmatrix.tinker.repository.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -86,5 +91,28 @@ public class AppointmentService {
         } catch(Exception e){
             throw new RuntimeException();
         }
+    }
+
+    public AppointmentsListDTO getAppointments(Long clientId) {
+        Optional<Client> client = clientRepository.findById(clientId);
+        AppointmentsListDTO appointmentsListDTO = new AppointmentsListDTO();
+        List<AppointmentBookingsDTO> appointmentBookingsDTOS = new ArrayList<>();
+        if(client.isPresent()) {
+            List<Appointment> appointments = appointmentRepository.findByClientId(clientId);
+            if (!appointments.isEmpty()) {
+                for (Appointment appointment : appointments) {
+                    AppointmentBookingsDTO appointmentBookingsDTO = AppointmentBookingsDTO.builder()
+                            .date(appointment.getDate())
+                            .timeslotid(appointment.getTimeslotId())
+                            .description(appointment.getDescription())
+                            .customer(appointment.getCustomer())
+                            .build();
+                    appointmentBookingsDTOS.add(appointmentBookingsDTO);
+                }
+            }
+            appointmentsListDTO.setClient(client.get());
+            appointmentsListDTO.setAppointments(appointmentBookingsDTOS);
+        }
+        return appointmentsListDTO;
     }
 }

@@ -3,6 +3,7 @@ package com.solutionmatrix.tinker.controller;
 import com.solutionmatrix.tinker.constants.ResponseCode;
 import com.solutionmatrix.tinker.model.entity.Client;
 import com.solutionmatrix.tinker.model.request.ClientPostRequestDTO;
+import com.solutionmatrix.tinker.model.request.LoginDTO;
 import com.solutionmatrix.tinker.model.response.Response;
 import com.solutionmatrix.tinker.service.ClientService;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,43 @@ public class ClientController {
                     .responseMessage(ResponseCode.NOTACCEPTABLE.getMessage())
                     .build();
         }
+    }
+
+    @GetMapping(value = "/login")
+    public Response<?> loginCheck(@RequestBody LoginDTO loginDTO) {
+        try {
+            int loginChecker = clientService.loginCheck(loginDTO);
+            if (loginChecker == 200) {
+                return Response.builder()
+                        .responseMessage(ResponseCode.SUCCESS.getMessage())
+                        .responseCode(ResponseCode.SUCCESS.getCode())
+                        .response(clientService.loginCheck(loginDTO))
+                        .build();
+            } else if (loginChecker == 409) {
+                return Response.builder()
+                        .responseMessage("Password mismatch")
+                        .responseCode(ResponseCode.CONFLICT.getCode())
+                        .response("password_mismatch")
+                        .build();
+            } else if (loginChecker == 404) {
+                return Response.builder()
+                        .responseMessage("Username not Found")
+                        .responseCode(ResponseCode.CONFLICT.getCode())
+                        .response("username_not_found")
+                        .build();
+            }
+        } catch (Exception ex) {
+            return Response.builder()
+                    .response("")
+                    .responseCode(ResponseCode.NOTACCEPTABLE.getCode())
+                    .responseMessage(ResponseCode.NOTACCEPTABLE.getMessage())
+                    .build();
+        }
+        return Response.builder()
+                .response("")
+                .responseCode(ResponseCode.NOTACCEPTABLE.getCode())
+                .responseMessage(ResponseCode.NOTACCEPTABLE.getMessage())
+                .build();
     }
 
     @GetMapping(value = "/{id}")
