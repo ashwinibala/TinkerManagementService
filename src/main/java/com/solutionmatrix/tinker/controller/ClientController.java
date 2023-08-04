@@ -4,6 +4,8 @@ import com.solutionmatrix.tinker.constants.ResponseCode;
 import com.solutionmatrix.tinker.model.entity.Client;
 import com.solutionmatrix.tinker.model.request.ClientPostRequestDTO;
 import com.solutionmatrix.tinker.model.response.Response;
+import com.solutionmatrix.tinker.repository.ClientRepository;
+import com.solutionmatrix.tinker.service.AppointmentService;
 import com.solutionmatrix.tinker.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,10 @@ import java.util.Optional;
 public class ClientController {
 
     private final ClientService clientService;
+
+    private final AppointmentService appointmentService;
+
+    private final ClientRepository clientRepository;
 
     @PostMapping
     public Response<?> createClient(@RequestBody ClientPostRequestDTO clientPostRequestDTO) {
@@ -43,16 +49,17 @@ public class ClientController {
         }
     }
 
-    @GetMapping(value = "/{username}/{password}")
+    @GetMapping(value = "/login/{username}/{password}")
     public Response<?> getClient(@PathVariable("username") String username,
                                  @PathVariable("password") String password) {
         try {
             int loginChecker = clientService.loginCheck(username, password);
             if (loginChecker == 200) {
+                Optional<Client> client = clientRepository.findByUsername(username);
                 return Response.builder()
                         .responseMessage(ResponseCode.SUCCESS.getMessage())
                         .responseCode(ResponseCode.SUCCESS.getCode())
-                        .response("Login Successful")
+                        .response(appointmentService.getAppointments(client.get().getId()))
                         .build();
             } else if (loginChecker == 409) {
                 return Response.builder()
