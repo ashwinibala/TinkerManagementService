@@ -3,7 +3,6 @@ package com.solutionmatrix.tinker.service;
 import com.solutionmatrix.tinker.mapper.ClientMapper;
 import com.solutionmatrix.tinker.model.entity.Client;
 import com.solutionmatrix.tinker.model.request.ClientPostRequestDTO;
-import com.solutionmatrix.tinker.model.request.LoginDTO;
 import com.solutionmatrix.tinker.model.response.ClientPostResponseDTO;
 import com.solutionmatrix.tinker.repository.ClientRepository;
 import com.solutionmatrix.tinker.validator.ClientValidator;
@@ -47,12 +46,12 @@ public class ClientService {
         }
     }
 
-    public int loginCheck(LoginDTO loginDTO) {
+    public int loginCheck(String username, String password) {
 
         try {
-            Optional<Client> client = clientRepository.findByUsername(loginDTO.getUsername());
+            Optional<Client> client = clientRepository.findByUsername(username);
             if(client.isPresent()) {
-                if (client.get().getPassword().equals(loginDTO.getPassword())) {
+                if (client.get().getPassword().equals(password)) {
                     return 200;
                 } else {
                     return 409;

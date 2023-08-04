@@ -3,7 +3,6 @@ package com.solutionmatrix.tinker.controller;
 import com.solutionmatrix.tinker.constants.ResponseCode;
 import com.solutionmatrix.tinker.model.entity.Client;
 import com.solutionmatrix.tinker.model.request.ClientPostRequestDTO;
-import com.solutionmatrix.tinker.model.request.LoginDTO;
 import com.solutionmatrix.tinker.model.response.Response;
 import com.solutionmatrix.tinker.service.ClientService;
 import lombok.RequiredArgsConstructor;
@@ -44,15 +43,16 @@ public class ClientController {
         }
     }
 
-    @GetMapping(value = "/login")
-    public Response<?> loginCheck(@RequestBody LoginDTO loginDTO) {
+    @GetMapping(value = "/{username}/{password}")
+    public Response<?> getClient(@PathVariable("username") String username,
+                                 @PathVariable("password") String password) {
         try {
-            int loginChecker = clientService.loginCheck(loginDTO);
+            int loginChecker = clientService.loginCheck(username, password);
             if (loginChecker == 200) {
                 return Response.builder()
                         .responseMessage(ResponseCode.SUCCESS.getMessage())
                         .responseCode(ResponseCode.SUCCESS.getCode())
-                        .response(clientService.loginCheck(loginDTO))
+                        .response("Login Successful")
                         .build();
             } else if (loginChecker == 409) {
                 return Response.builder()
