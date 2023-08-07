@@ -46,7 +46,7 @@ public class AppointmentService {
                     .build();
             Appointment savedAppointment = appointmentRepository.save(appointment);
             Optional<Client> client = clientRepository.findById(savedAppointment.getClientId());
-            clientAvailabilityService.updateClientAvailability(savedAppointment.getClientId(), savedAppointment.getDate(), savedAppointment.getTimeslotId());
+            clientAvailabilityService.updateClientAvailability(savedAppointment.getClientId(), savedAppointment.getDate(), savedAppointment.getTimeslotId(), 2L);
 
             Timeslot timeslot = timeslotRepository.getReferenceById(appointment.getTimeslotId());
 
@@ -114,5 +114,20 @@ public class AppointmentService {
             appointmentsListDTO.setAppointments(appointmentBookingsDTOS);
         }
         return appointmentsListDTO;
+    }
+
+    public Integer deleteAppointment(Long clientId, Long appointmentId) {
+        try {
+            Optional<Appointment> appointment = appointmentRepository.findByClientIdAndId(clientId, appointmentId);
+            if(appointment.isPresent()) {
+                appointmentRepository.delete(appointment.get());
+                clientAvailabilityService.updateClientAvailability(clientId, appointment.get().getDate(), appointment.get().getTimeslotId(), 1L);
+                return 200;
+            } else {
+                return 404;
+            }
+        } catch(Exception e){
+            throw new RuntimeException();
+        }
     }
 }

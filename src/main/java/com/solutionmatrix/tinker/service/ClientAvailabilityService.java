@@ -61,12 +61,17 @@ public class ClientAvailabilityService {
                 }
         }
 
-        public void updateClientAvailability(Long clientId, String date, Long timeslotId) {
+        public void updateClientAvailability(Long clientId, String date, Long timeslotId, Long status) {
                 try {
-                   Optional<ClientAvailability> clientAvailability = clientAvailabilityRepository.findByClientIdAndDateAndTimeslotIdAndStatusId(clientId, date, timeslotId, 1L);
+                        Optional<ClientAvailability> clientAvailability;
+                        if(status == 1L) {
+                                clientAvailability = clientAvailabilityRepository.findByClientIdAndDateAndTimeslotIdAndStatusId(clientId, date, timeslotId, 2L);
+                        } else {
+                                clientAvailability = clientAvailabilityRepository.findByClientIdAndDateAndTimeslotIdAndStatusId(clientId, date, timeslotId, 1L);
+                        }
                    if (clientAvailability.isPresent()){
                            ClientAvailability availability = clientAvailability.get();
-                           availability.setStatusId(2L);
+                           availability.setStatusId(status);
                            clientAvailabilityRepository.save(availability);
                    }
                 } catch(Exception e) {

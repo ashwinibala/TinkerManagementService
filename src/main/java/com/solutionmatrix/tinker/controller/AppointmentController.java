@@ -63,4 +63,43 @@ public class AppointmentController {
                     .build();
         }
     }
+
+    @DeleteMapping (value = "/{clientId}/{appointmentId}")
+    public Response<?> deleteAppointments(@PathVariable("clientId") Long clientId,
+                                          @PathVariable("appointmentId") Long appointmentId) {
+
+        try {
+            Integer response = appointmentService.deleteAppointment(clientId, appointmentId);
+            if (response == 200) {
+                return Response.builder()
+                        .responseMessage(ResponseCode.SUCCESS.getMessage())
+                        .responseCode(ResponseCode.SUCCESS.getCode())
+                        .response("Appointment deleted successfully!!!")
+                        .build();
+            } else if (response == 404){
+                return Response.builder()
+                        .responseMessage(ResponseCode.NOTFOUND.getMessage())
+                        .responseCode(ResponseCode.NOTFOUND.getCode())
+                        .response("Appointment Not Found")
+                        .build();
+            }
+        } catch (RuntimeException e) {
+            return Response.builder()
+                    .responseMessage(e.getMessage())
+                    .responseCode(ResponseCode.CONFLICT.getCode())
+                    .response("")
+                    .build();
+        } catch (Exception e) {
+            return Response.builder()
+                    .response("")
+                    .responseCode(ResponseCode.NOTACCEPTABLE.getCode())
+                    .responseMessage(ResponseCode.NOTACCEPTABLE.getMessage())
+                    .build();
+        }
+        return Response.builder()
+                .response("")
+                .responseCode(ResponseCode.NOTACCEPTABLE.getCode())
+                .responseMessage(ResponseCode.NOTACCEPTABLE.getMessage())
+                .build();
+    }
 }
