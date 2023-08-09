@@ -45,7 +45,7 @@ class EmailServiceImplTest {
 
     @Test
     void testSendSimpleMail_SuccessTest() {
-        // Mock behavior for JavaMailSender
+
         doNothing().when(javaMailSender).send(any(SimpleMailMessage.class));
 
         EmailDetails emailDetails = EmailDetails.builder()

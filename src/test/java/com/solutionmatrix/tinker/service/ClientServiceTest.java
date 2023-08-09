@@ -72,8 +72,8 @@ class ClientServiceTest {
     @Test
     public void testCreateClient_ValidationFailure() {
 
-        ClientPostRequestDTO requestDTO = new ClientPostRequestDTO(/* initialize request DTO */);
-        Client clientRequest = new Client(/* initialize client entity */);
+        ClientPostRequestDTO requestDTO = new ClientPostRequestDTO();
+        Client clientRequest = new Client();
 
 
         when(clientMapper.clientPostRequestDtoToClient(requestDTO)).thenReturn(clientRequest);
@@ -87,8 +87,8 @@ class ClientServiceTest {
     @Test
     public void testCreateClient_DatabaseSaveError() {
 
-        ClientPostRequestDTO requestDTO = new ClientPostRequestDTO(/* initialize request DTO */);
-        Client clientRequest = new Client(/* initialize client entity */);
+        ClientPostRequestDTO requestDTO = new ClientPostRequestDTO();
+        Client clientRequest = new Client();
 
 
         when(clientMapper.clientPostRequestDtoToClient(requestDTO)).thenReturn(clientRequest);
